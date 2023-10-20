@@ -2,42 +2,42 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Coiled Notebooks Workflow",
+    "title": "Workflow",
     "section": "",
     "text": "Create an AWS Administrator user with secret access keys for programmatic management of AWS resources using the AWS console (see 05:20 - 09:35 from this walkthrough of setting up an AWS account). Access keys should be downloaded to ~/.aws/credentials under the default profile (non-default profile will not work). Ensure ~/.aws/config does not exist.\n\n\n\n\n\nInstall and Configure Mutagen using the official installation documentation\n\ndownload .tar.gz file to ${HOME}\nextract into ${HOME}\nadd extracted contents to system path\n\nRun\nnano ~/.bashrc\nAppend the following to the end of the file\nexport PATH=$PATH:/home/&lt;user-name&gt;/mutagen_linux_amd64_vX.XX.X\nSave the file using Ctrl + C\nEnter Y to save changes\nSource the modified .bashrc file using\nsource ~/.bashrc\n\n\nExport COILED_TOKEN and COILED_ACCOUNT_NAME as environment variables\nexport COILED_TOKEN=&lt;coiled-token&gt;\nexport COILED_ACCOUNT_NAME=&lt;coiled-account-name&gt;\nLog in to Coiled\ncoiled login --token {env:COILED_TOKEN} -a {env:COILED_ACCOUNT_NAME} --no-browser\nor\nmake coiled-login\nwhich will create an entry in ~/.config/dask/coiled.yaml\nPerform the following AWS administrative tasks\n\nCreate AWS IAM (non-administrator) User named &lt;username&gt;\nGrant AmazonS3FullAccess permissions to newly created user\nCreate token for newly created user\n\nusing\nmake coiled-setup\nand run the code in Setup Coiled Cloud Provider (AWS)\nConfigure Coiled to use AWS Cloud with the IAM User created in the step above\ncoiled setup aws --account {env:COILED_ACCOUNT_NAME} \\\n    --profile default \\\n    --region us-east-2 \\\n    --iam-user &lt;username&gt;\nor\nmake coiled-setup\nCreate Coiled software environment named &lt;coiled-software-environment&gt; and AWS S3 storage bucket named oss-shared-scratchp to be used by Coiled notebook\nmake coiled-software\nrun the code in\n\nManage Coiled Software Environment(s) &gt; Create\n\ncreates Coiled software environment\n\nSetup Cloud Storage (AWS)\n\ncreates S3 storage bucket\n\n\nStart Coiled notebook from the code directory (the folder to be synced to the cloud notebook)\ncd code && coiled notebook start --sync --region us-east-2 \\\n    --account {env:COILED_ACCOUNT_NAME} \\\n    --name coilednb \\\n    --software &lt;coiled-software-environment&gt; \\\n    --vm-type m6i.2xlarge\nor\nmake coiled-nb\nThe browser launches with Jupyterlab and the contents of the synced folder (code) are visible\nRun the notebook coiled_notebooks_demo.ipynb\n\nthe cell to list bucket contents should\n\nrun with no errors since the AWS user has Administrator privileges\nproduce the following output\n&gt; s3_client.list_buckets()['Buckets']\n[\n    {\n        'Name': 'oss-shared-scratchp',\n        'CreationDate': &lt;creation-datetime(s)-here&gt;\n    },\n    {\n        'Name': &lt;additional-bucket(s)-here&gt;,\n        'CreationDate': &lt;creation-datetime(s)-here&gt;,\n    },\n]\n\n\n\n\n\n\n\nIf the contents of code/ are to be synced to the Coiled notebook, then run cd code/ before running the coiled notebook start command. This is shown in step 6. In tox.ini, this is done using the changedir directive.\n\n\n\n\n\nAWS EC2 instance\n\ntypes\npricing\n\nDemo webinar for Coiled notebooks\n\nfunctionality in coiled_notebooks_demo.ipynb is covered in 08:28 - 11:02 of this video\n\n\n\n\n\n\nReplace all boto3 functionality of 00_0_0_manaage_coiled.ipynb by Ansible playbook that performs the following\n\ncreate IAM role coiled-COILED_ACCOUNT_NAME\ncreate Coiled instance policy named CoiledInstancePolicy\ncreate Coiled IAM ongoing and setup policies\ncreate non-admin IAM user\nattach policies to IAM role\n\nCoiled instance policy\nAmazonS3FullAccess\n\nattach policies to IAM user\n\nsetup policy\nongoing policy\n\n(optional) create IAM access key for EC2 instance\ncreate private S3 bucket"
   },
   {
     "objectID": "index.html#pre-requisites",
     "href": "index.html#pre-requisites",
-    "title": "Coiled Notebooks Workflow",
+    "title": "Workflow",
     "section": "",
     "text": "Create an AWS Administrator user with secret access keys for programmatic management of AWS resources using the AWS console (see 05:20 - 09:35 from this walkthrough of setting up an AWS account). Access keys should be downloaded to ~/.aws/credentials under the default profile (non-default profile will not work). Ensure ~/.aws/config does not exist."
   },
   {
     "objectID": "index.html#usage",
     "href": "index.html#usage",
-    "title": "Coiled Notebooks Workflow",
+    "title": "Workflow",
     "section": "",
     "text": "Install and Configure Mutagen using the official installation documentation\n\ndownload .tar.gz file to ${HOME}\nextract into ${HOME}\nadd extracted contents to system path\n\nRun\nnano ~/.bashrc\nAppend the following to the end of the file\nexport PATH=$PATH:/home/&lt;user-name&gt;/mutagen_linux_amd64_vX.XX.X\nSave the file using Ctrl + C\nEnter Y to save changes\nSource the modified .bashrc file using\nsource ~/.bashrc\n\n\nExport COILED_TOKEN and COILED_ACCOUNT_NAME as environment variables\nexport COILED_TOKEN=&lt;coiled-token&gt;\nexport COILED_ACCOUNT_NAME=&lt;coiled-account-name&gt;\nLog in to Coiled\ncoiled login --token {env:COILED_TOKEN} -a {env:COILED_ACCOUNT_NAME} --no-browser\nor\nmake coiled-login\nwhich will create an entry in ~/.config/dask/coiled.yaml\nPerform the following AWS administrative tasks\n\nCreate AWS IAM (non-administrator) User named &lt;username&gt;\nGrant AmazonS3FullAccess permissions to newly created user\nCreate token for newly created user\n\nusing\nmake coiled-setup\nand run the code in Setup Coiled Cloud Provider (AWS)\nConfigure Coiled to use AWS Cloud with the IAM User created in the step above\ncoiled setup aws --account {env:COILED_ACCOUNT_NAME} \\\n    --profile default \\\n    --region us-east-2 \\\n    --iam-user &lt;username&gt;\nor\nmake coiled-setup\nCreate Coiled software environment named &lt;coiled-software-environment&gt; and AWS S3 storage bucket named oss-shared-scratchp to be used by Coiled notebook\nmake coiled-software\nrun the code in\n\nManage Coiled Software Environment(s) &gt; Create\n\ncreates Coiled software environment\n\nSetup Cloud Storage (AWS)\n\ncreates S3 storage bucket\n\n\nStart Coiled notebook from the code directory (the folder to be synced to the cloud notebook)\ncd code && coiled notebook start --sync --region us-east-2 \\\n    --account {env:COILED_ACCOUNT_NAME} \\\n    --name coilednb \\\n    --software &lt;coiled-software-environment&gt; \\\n    --vm-type m6i.2xlarge\nor\nmake coiled-nb\nThe browser launches with Jupyterlab and the contents of the synced folder (code) are visible\nRun the notebook coiled_notebooks_demo.ipynb\n\nthe cell to list bucket contents should\n\nrun with no errors since the AWS user has Administrator privileges\nproduce the following output\n&gt; s3_client.list_buckets()['Buckets']\n[\n    {\n        'Name': 'oss-shared-scratchp',\n        'CreationDate': &lt;creation-datetime(s)-here&gt;\n    },\n    {\n        'Name': &lt;additional-bucket(s)-here&gt;,\n        'CreationDate': &lt;creation-datetime(s)-here&gt;,\n    },\n]"
   },
   {
     "objectID": "index.html#notes",
     "href": "index.html#notes",
-    "title": "Coiled Notebooks Workflow",
+    "title": "Workflow",
     "section": "",
     "text": "If the contents of code/ are to be synced to the Coiled notebook, then run cd code/ before running the coiled notebook start command. This is shown in step 6. In tox.ini, this is done using the changedir directive."
   },
   {
     "objectID": "index.html#links",
     "href": "index.html#links",
-    "title": "Coiled Notebooks Workflow",
+    "title": "Workflow",
     "section": "",
     "text": "AWS EC2 instance\n\ntypes\npricing\n\nDemo webinar for Coiled notebooks\n\nfunctionality in coiled_notebooks_demo.ipynb is covered in 08:28 - 11:02 of this video"
   },
   {
     "objectID": "index.html#future-work",
     "href": "index.html#future-work",
-    "title": "Coiled Notebooks Workflow",
+    "title": "Workflow",
     "section": "",
     "text": "Replace all boto3 functionality of 00_0_0_manaage_coiled.ipynb by Ansible playbook that performs the following\n\ncreate IAM role coiled-COILED_ACCOUNT_NAME\ncreate Coiled instance policy named CoiledInstancePolicy\ncreate Coiled IAM ongoing and setup policies\ncreate non-admin IAM user\nattach policies to IAM role\n\nCoiled instance policy\nAmazonS3FullAccess\n\nattach policies to IAM user\n\nsetup policy\nongoing policy\n\n(optional) create IAM access key for EC2 instance\ncreate private S3 bucket"
   }
