@@ -90,7 +90,7 @@
        --account {env:COILED_ACCOUNT_NAME} \
        --name coilednb \
        --software <coiled-software-environment> \
-       --vm-type m6i.2xlarge
+       --vm-type t3.xlarge
    ```
 
    or
