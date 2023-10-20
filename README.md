@@ -6,6 +6,6 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 ![prs-welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)
 
-## About
+## [About](#about)
 
 Workflow to programmatically deploy a cloud-based [JupyterLab server](https://jupyterlab.readthedocs.io/en/latest/) using [Coiled notebooks](https://docs.coiled.io/user_guide/usage/notebooks/index.html).
