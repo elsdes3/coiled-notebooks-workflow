@@ -9,7 +9,8 @@ repos:
       verbose: true
       exclude: |
           (?x)(
-              __init__.py
+              __init__.py|
+              ^_site/
           )
   - repo: https://github.com/pycqa/flake8
     rev: 6.1.0
@@ -42,6 +43,7 @@ repos:
       language_version: python3.10
       args: ["--markdown-linebreak-ext=md"]
       verbose: true
+      exclude: ^(_site/)
   - repo: https://github.com/econchick/interrogate
     rev: 1.5.0
     hooks:
