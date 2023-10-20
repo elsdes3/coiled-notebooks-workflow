@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.313">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Coiled Notebooks Workflow</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Coiled Notebooks Workflow</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools ms-auto">
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Walkthrough</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Walkthrough</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="3">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#coiled-notebooks-workflow" id="toc-coiled-notebooks-workflow" class="nav-link active" data-scroll-target="#coiled-notebooks-workflow">Coiled Notebooks Workflow</a>
+  <ul class="collapse">
+  <li><a href="#pre-requisites" id="toc-pre-requisites" class="nav-link" data-scroll-target="#pre-requisites">Pre-Requisites</a></li>
+  <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
+  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
+  <li><a href="#links" id="toc-links" class="nav-link" data-scroll-target="#links">Links</a></li>
+  <li><a href="#future-work" id="toc-future-work" class="nav-link" data-scroll-target="#future-work">Future Work</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/elsdes3/coiled-notebooks/edit/main/index.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/elsdes3/coiled-notebooks/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content column-body" id="quarto-document-content">
+
+
+
+<section id="coiled-notebooks-workflow" class="level1">
+<h1>Coiled Notebooks Workflow</h1>
+<section id="pre-requisites" class="level2">
+<h2 class="anchored" data-anchor-id="pre-requisites">Pre-Requisites</h2>
+<ol type="1">
+<li>Create an AWS Administrator user with secret access keys for programmatic management of AWS resources using the AWS console (see 05:20 - 09:35 from <a href="https://youtu.be/FRQ9fE4fd5g?si=yI0D4F_FhVTVmgQn&amp;t=320">this walkthrough of setting up an AWS account</a>). Access keys should be downloaded to <code>~/.aws/credentials</code> under the <code>default</code> profile (non-<code>default</code> profile will not work). Ensure <code>~/.aws/config</code> does not exist.</li>
+</ol>
+</section>
+<section id="usage" class="level2">
+<h2 class="anchored" data-anchor-id="usage">Usage</h2>
+<ol type="1">
+<li><p>Install and Configure <a href="https://mutagen.io/documentation/introduction">Mutagen</a> using the <a href="https://mutagen.io/documentation/introduction/installation#other-platforms">official installation documentation</a></p>
+<ul>
+<li>download <code>.tar.gz</code> file to <code>${HOME}</code></li>
+<li>extract into <code>${HOME}</code></li>
+<li>add extracted <a href="https://askubuntu.com/a/60219/389946">contents to system path</a>
+<ul>
+<li><p>Run</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nano</span> ~/.bashrc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>Append the following to the end of the file</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="va">$PATH</span>:/home/<span class="op">&lt;</span>user-name<span class="op">&gt;</span>/mutagen_linux_amd64_vX.XX.X</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>Save the file using <kbd>Ctrl</kbd> + <kbd>C</kbd></p></li>
+<li><p>Enter <code>Y</code> to save changes</p></li>
+<li><p>Source the modified <code>.bashrc</code> file using</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> ~/.bashrc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ul></li>
+</ul></li>
+<li><p>Export <code>COILED_TOKEN</code> and <code>COILED_ACCOUNT_NAME</code> as environment variables</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">COILED_TOKEN</span><span class="op">=&lt;</span>coiled-token<span class="op">&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">COILED_ACCOUNT_NAME</span><span class="op">=&lt;</span>coiled-account-name<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>Log in to Coiled</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">coiled</span> login <span class="at">--token</span> {env:COILED_TOKEN} <span class="at">-a</span> {env:COILED_ACCOUNT_NAME} <span class="at">--no-browser</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>or</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> coiled-login</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>which will create an entry in <code>~/.config/dask/coiled.yaml</code></p></li>
+<li><p>Perform the following AWS administrative tasks</p>
+<ul>
+<li>Create AWS IAM (non-administrator) User named <code>&lt;username&gt;</code></li>
+<li>Grant <code>AmazonS3FullAccess</code> permissions to newly created user</li>
+<li>Create token for newly created user</li>
+</ul>
+<p>using</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> coiled-setup</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>and run the code in <strong>Setup Coiled Cloud Provider (AWS)</strong></p></li>
+<li><p>Configure Coiled to use AWS Cloud with the IAM User created in the step above</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">coiled</span> setup aws <span class="at">--account</span> {env:COILED_ACCOUNT_NAME} <span class="dt">\</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--profile</span> default <span class="dt">\</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--region</span> us-east-2 <span class="dt">\</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--iam-user</span> <span class="op">&lt;</span>username<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>or</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> coiled-setup</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>Create Coiled software environment named <code>&lt;coiled-software-environment&gt;</code> and AWS S3 storage bucket named <code>oss-shared-scratchp</code> to be used by Coiled notebook</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> coiled-software</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>run the code in</p>
+<ul>
+<li><strong>Manage Coiled Software Environment(s)</strong> &gt; <strong>Create</strong>
+<ul>
+<li>creates Coiled software environment</li>
+</ul></li>
+<li><strong>Setup Cloud Storage (AWS)</strong>
+<ul>
+<li>creates S3 storage bucket</li>
+</ul></li>
+</ul></li>
+<li><p>Start Coiled notebook from the <code>code</code> directory (the folder to be synced to the cloud notebook)</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> code <span class="kw">&amp;&amp;</span> <span class="ex">coiled</span> notebook start <span class="at">--sync</span> <span class="at">--region</span> us-east-2 <span class="dt">\</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--account</span> {env:COILED_ACCOUNT_NAME} <span class="dt">\</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--name</span> coilednb <span class="dt">\</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--software</span> <span class="op">&lt;</span>coiled-software-environment<span class="op">&gt;</span> <span class="dt">\</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">--vm-type</span> m6i.2xlarge</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>or</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> coiled-nb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>The browser launches with Jupyterlab and the contents of the synced folder (<code>code</code>) are visible</p></li>
+<li><p>Run the notebook <code>coiled_notebooks_demo.ipynb</code></p>
+<ul>
+<li>the cell to list bucket contents should
+<ul>
+<li><p>run with no errors since the AWS user has Administrator privileges</p></li>
+<li><p>produce the following output</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> s3_client.list_buckets()[<span class="st">'Buckets'</span>]</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>[</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Name'</span>: <span class="st">'oss-shared-scratchp'</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">'CreationDate'</span>: <span class="op">&lt;</span>creation<span class="op">-</span>datetime(s)<span class="op">-</span>here<span class="op">&gt;</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Name'</span>: <span class="op">&lt;</span>additional<span class="op">-</span>bucket(s)<span class="op">-</span>here<span class="op">&gt;</span>,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">'CreationDate'</span>: <span class="op">&lt;</span>creation<span class="op">-</span>datetime(s)<span class="op">-</span>here<span class="op">&gt;</span>,</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ul></li>
+</ul></li>
+</ol>
+</section>
+<section id="notes" class="level2">
+<h2 class="anchored" data-anchor-id="notes">Notes</h2>
+<ol type="1">
+<li>If the contents of <code>code/</code> are to be synced to the Coiled notebook, then run <code>cd code/</code> before running the <code>coiled notebook start</code> command. This is shown in step 6. In <code>tox.ini</code>, this is done using the <code>changedir</code> directive.</li>
+</ol>
+</section>
+<section id="links" class="level2">
+<h2 class="anchored" data-anchor-id="links">Links</h2>
+<ol type="1">
+<li>AWS EC2 instance
+<ul>
+<li><a href="https://aws.amazon.com/ec2/instance-types/">types</a></li>
+<li><a href="https://aws.amazon.com/ec2/pricing/on-demand/">pricing</a></li>
+</ul></li>
+<li><a href="https://youtu.be/s4Ge6QICz98?si=BWVNyegpd9o1Dnwl&amp;t=508">Demo webinar for Coiled notebooks</a>
+<ul>
+<li>functionality in <code>coiled_notebooks_demo.ipynb</code> is covered in 08:28 - 11:02 of this video</li>
+</ul></li>
+</ol>
+</section>
+<section id="future-work" class="level2">
+<h2 class="anchored" data-anchor-id="future-work">Future Work</h2>
+<ol type="1">
+<li>Replace all <code>boto3</code> functionality of <code>00_0_0_manaage_coiled.ipynb</code> by Ansible playbook that performs the following
+<ul>
+<li>create IAM role <em>coiled-COILED_ACCOUNT_NAME</em></li>
+<li>create Coiled instance policy named <em>CoiledInstancePolicy</em></li>
+<li>create <a href="https://docs.coiled.io/user_guide/setup/aws/manual.html#create-iam-policies">Coiled IAM ongoing and setup policies</a></li>
+<li>create non-admin IAM user</li>
+<li>attach policies to IAM role
+<ul>
+<li>Coiled instance policy</li>
+<li><code>AmazonS3FullAccess</code></li>
+</ul></li>
+<li>attach policies to IAM user
+<ul>
+<li>setup policy</li>
+<li>ongoing policy</li>
+</ul></li>
+<li>(optional) create IAM access key for EC2 instance</li>
+<li>create private S3 bucket</li>
+</ul></li>
+</ol>
+
+
+</section>
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var filterRegex = new RegExp("^(?:http:|https:)\/\/www\.quarto\.org\/custom");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+      }
+    }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
