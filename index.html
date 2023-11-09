@@ -154,13 +154,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#workflow" id="toc-workflow" class="nav-link active" data-scroll-target="#workflow">Workflow</a>
+  <li><a href="#using-coiled-to-run-jupyter-notebooks" id="toc-using-coiled-to-run-jupyter-notebooks" class="nav-link active" data-scroll-target="#using-coiled-to-run-jupyter-notebooks">Using Coiled to Run Jupyter Notebooks</a>
   <ul class="collapse">
-  <li><a href="#pre-requisites" id="toc-pre-requisites" class="nav-link" data-scroll-target="#pre-requisites">Pre-Requisites</a></li>
-  <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
-  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
-  <li><a href="#links" id="toc-links" class="nav-link" data-scroll-target="#links">Links</a></li>
-  <li><a href="#future-work" id="toc-future-work" class="nav-link" data-scroll-target="#future-work">Future Work</a></li>
+  <li><a href="#pre-requisites" id="toc-pre-requisites" class="nav-link" data-scroll-target="#pre-requisites">Pre-Requisites</a>
+  <ul class="collapse">
+  <li><a href="#aws" id="toc-aws" class="nav-link" data-scroll-target="#aws">AWS</a></li>
+  <li><a href="#mutagen" id="toc-mutagen" class="nav-link" data-scroll-target="#mutagen">Mutagen</a></li>
+  <li><a href="#coiled" id="toc-coiled" class="nav-link" data-scroll-target="#coiled">Coiled</a></li>
+  </ul></li>
+  <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a>
+  <ul class="collapse">
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup</a></li>
+  <li><a href="#create-notebook" id="toc-create-notebook" class="nav-link" data-scroll-target="#create-notebook">Create Notebook</a></li>
+  <li><a href="#teardown" id="toc-teardown" class="nav-link" data-scroll-target="#teardown">Teardown</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/elsdes3/coiled-notebooks/edit/main/index.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/elsdes3/coiled-notebooks/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
@@ -170,145 +177,141 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="workflow" class="level1">
-<h1>Workflow</h1>
+<section id="using-coiled-to-run-jupyter-notebooks" class="level1">
+<h1>Using Coiled to Run Jupyter Notebooks</h1>
 <section id="pre-requisites" class="level2">
 <h2 class="anchored" data-anchor-id="pre-requisites">Pre-Requisites</h2>
+<section id="aws" class="level3">
+<h3 class="anchored" data-anchor-id="aws">AWS</h3>
 <ol type="1">
-<li>Create an AWS Administrator user with secret access keys for programmatic management of AWS resources using the AWS console (see 05:20 - 09:35 from <a href="https://youtu.be/FRQ9fE4fd5g?si=yI0D4F_FhVTVmgQn&amp;t=320">this walkthrough of setting up an AWS account</a>). Access keys should be downloaded to <code>~/.aws/credentials</code> under the <code>default</code> profile (non-<code>default</code> profile will not work). Ensure <code>~/.aws/config</code> does not exist.</li>
+<li>Using the <a href="https://docs.aws.amazon.com/awsconsolehelpdocs/latest/gsg/learn-whats-new.html">AWS Management Console</a>, create an AWS Administrator IAM user with secret access keys for programmatic management of AWS resources. Instructions to do this are available from 05:20 - 09:35 of <a href="https://youtu.be/FRQ9fE4fd5g?si=yI0D4F_FhVTVmgQn&amp;t=320">this walkthrough</a>.</li>
+<li>Download access keys for this IAM user and store them in <code>~/.aws/credentials</code> under the <code>default</code> profile, as <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html#shared-credentials-file">explained in the <code>boto3</code> documentation</a>.</li>
+<li>Ensure that <code>~/.aws/config</code> does not exist.</li>
 </ol>
 </section>
-<section id="usage" class="level2">
-<h2 class="anchored" data-anchor-id="usage">Usage</h2>
+<section id="mutagen" class="level3">
+<h3 class="anchored" data-anchor-id="mutagen">Mutagen</h3>
+<p>Install and Configure <a href="https://mutagen.io/documentation/introduction">Mutagen</a> using the <a href="https://mutagen.io/documentation/introduction/installation#other-platforms">official installation documentation</a></p>
 <ol type="1">
-<li><p>Install and Configure <a href="https://mutagen.io/documentation/introduction">Mutagen</a> using the <a href="https://mutagen.io/documentation/introduction/installation#other-platforms">official installation documentation</a></p>
-<ul>
 <li>download <code>.tar.gz</code> file to <code>${HOME}</code></li>
 <li>extract into <code>${HOME}</code></li>
 <li>add extracted <a href="https://askubuntu.com/a/60219/389946">contents to system path</a>
 <ul>
-<li><p>Run</p>
+<li><p>run</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nano</span> ~/.bashrc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
-<li><p>Append the following to the end of the file</p>
+<li><p>append the following to the end of the file</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="va">$PATH</span>:/home/<span class="op">&lt;</span>user-name<span class="op">&gt;</span>/mutagen_linux_amd64_vX.XX.X</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
-<li><p>Save the file using <kbd>Ctrl</kbd> + <kbd>C</kbd></p></li>
-<li><p>Enter <code>Y</code> to save changes</p></li>
-<li><p>Source the modified <code>.bashrc</code> file using</p>
+<li><p>save the file using <kbd>Ctrl</kbd> + <kbd>C</kbd></p></li>
+<li><p>enter <code>Y</code> to save changes</p></li>
+<li><p>source the modified <code>.bashrc</code> file using</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> ~/.bashrc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
 </ul></li>
-</ul></li>
-<li><p>Export <code>COILED_TOKEN</code> and <code>COILED_ACCOUNT_NAME</code> as environment variables</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">COILED_TOKEN</span><span class="op">=&lt;</span>coiled-token<span class="op">&gt;</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">COILED_ACCOUNT_NAME</span><span class="op">=&lt;</span>coiled-account-name<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
-<li><p>Log in to Coiled</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">coiled</span> login <span class="at">--token</span> {env:COILED_TOKEN} <span class="at">-a</span> {env:COILED_ACCOUNT_NAME} <span class="at">--no-browser</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</ol>
+</section>
+<section id="coiled" class="level3">
+<h3 class="anchored" data-anchor-id="coiled">Coiled</h3>
+<ol type="1">
+<li><p><a href="https://docs.coiled.io/user_guide/setup/index.html#sign-up">Create a Coiled account</a></p></li>
+<li><p><a href="https://docs.coiled.io/user_guide/setup/tokens.html">Manually create a Coiled API token</a></p></li>
+<li><p>Export the Coiled account name and Coiled API token to the environment variables <code>COILED_ACCOUNT_NAME</code> and <code>COILED_TOKEN</code> respectively</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">COILED_ACCOUNT_NAME</span><span class="op">=&lt;</span>coiled-account-name<span class="op">&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">COILED_TOKEN</span><span class="op">=&lt;</span>coiled-token<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ol>
+</section>
+</section>
+<section id="usage" class="level2">
+<h2 class="anchored" data-anchor-id="usage">Usage</h2>
+<section id="setup" class="level3">
+<h3 class="anchored" data-anchor-id="setup">Setup</h3>
+<ol type="1">
+<li><p>Clone this repo</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/elsdes3/coiled-notebooks-workflow.git</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>Change into the root directory</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> coiled-notebooks-workflow</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>Log in to Coiled using</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">coiled</span> login <span class="dt">\</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--token</span> {env:COILED_TOKEN} <span class="dt">\</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--account</span> {env:COILED_ACCOUNT_NAME} <span class="dt">\</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--no-browser</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>or</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> coiled-login</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>which will create an entry in <code>~/.config/dask/coiled.yaml</code></p></li>
-<li><p>Perform the following AWS administrative tasks</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> coiled-login</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>which will create an entry in <code>~/.config/dask/coiled.yaml</code>.</p></li>
+<li><p>Perform the following administrative tasks</p>
 <ul>
-<li>Create AWS IAM (non-administrator) User named <code>&lt;username&gt;</code></li>
-<li>Grant <code>AmazonS3FullAccess</code> permissions to newly created user</li>
-<li>Create token for newly created user</li>
+<li>AWS
+<ul>
+<li>create an IAM role <em>coiled-COILED_ACCOUNT_NAME</em></li>
+<li>create an the following IAM policies
+<ul>
+<li><em>CoiledInstancePolicy</em></li>
+<li><a href="https://docs.coiled.io/user_guide/setup/aws/manual.html#create-iam-policies">Coiled IAM ongoing and setup policies</a></li>
+</ul></li>
+<li>create an non-admin IAM user</li>
+<li>attach IAM policies to the newly created IAM role
+<ul>
+<li><em>CoiledInstancePolicy</em></li>
+<li><code>AmazonS3FullAccess</code></li>
+</ul></li>
+<li>attach policies to the newly created IAM user
+<ul>
+<li>Coiled setup policy</li>
+<li>Coiled ongoing policy</li>
+</ul></li>
+<li>create private S3 bucket named <code>oss-shared-scratchp</code></li>
+</ul></li>
+<li>Coiled
+<ul>
+<li>Configure Coiled to use AWS Cloud with the IAM User created in the step above</li>
+<li>Create Coiled software environment</li>
+</ul></li>
 </ul>
 <p>using</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> coiled-setup</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>and run the code in <strong>Setup Coiled Cloud Provider (AWS)</strong></p></li>
-<li><p>Configure Coiled to use AWS Cloud with the IAM User created in the step above</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">coiled</span> setup aws <span class="at">--account</span> {env:COILED_ACCOUNT_NAME} <span class="dt">\</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--profile</span> default <span class="dt">\</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--region</span> us-east-2 <span class="dt">\</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--iam-user</span> <span class="op">&lt;</span>username<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> create</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ol>
+</section>
+<section id="create-notebook" class="level3">
+<h3 class="anchored" data-anchor-id="create-notebook">Create Notebook</h3>
+<ol type="1">
+<li><p>Start a Coiled Jupyter notebook from the <code>code</code> directory (the folder to be synced to the cloud notebook)</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> code <span class="kw">&amp;&amp;</span> <span class="ex">coiled</span> notebook start <span class="at">--sync</span> <span class="at">--region</span> us-east-2 <span class="dt">\</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--account</span> {env:COILED_ACCOUNT_NAME} <span class="dt">\</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--name</span> coilednb <span class="dt">\</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--software</span> <span class="op">&lt;</span>coiled-software-environment-name<span class="op">&gt;</span> <span class="dt">\</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">--vm-type</span> t3.xlarge</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>or</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> coiled-setup</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
-<li><p>Create Coiled software environment named <code>&lt;coiled-software-environment&gt;</code> and AWS S3 storage bucket named <code>oss-shared-scratchp</code> to be used by Coiled notebook</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> coiled-software</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>run the code in</p>
-<ul>
-<li><strong>Manage Coiled Software Environment(s)</strong> &gt; <strong>Create</strong>
-<ul>
-<li>creates Coiled software environment</li>
-</ul></li>
-<li><strong>Setup Cloud Storage (AWS)</strong>
-<ul>
-<li>creates S3 storage bucket</li>
-</ul></li>
-</ul></li>
-<li><p>Start Coiled notebook from the <code>code</code> directory (the folder to be synced to the cloud notebook)</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> code <span class="kw">&amp;&amp;</span> <span class="ex">coiled</span> notebook start <span class="at">--sync</span> <span class="at">--region</span> us-east-2 <span class="dt">\</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--account</span> {env:COILED_ACCOUNT_NAME} <span class="dt">\</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--name</span> coilednb <span class="dt">\</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--software</span> <span class="op">&lt;</span>coiled-software-environment<span class="op">&gt;</span> <span class="dt">\</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">--vm-type</span> t3.xlarge</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>or</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> coiled-nb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
-<li><p>The browser launches with Jupyterlab and the contents of the synced folder (<code>code</code>) are visible</p></li>
-<li><p>Run the notebook <code>coiled_notebooks_demo.ipynb</code></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> coiled-nb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>If the contents of <code>code/</code> are to be synced to the Coiled notebook, then run <code>cd code/</code> before running the <code>coiled notebook start</code> command. This is shown in step 5. above. In <code>make coiled-nb</code>, this is done by <code>tox.ini</code> using the <code>changedir</code> directive.</p></li>
+<li><p>The browser launches the Jupyterlab interface and the contents of the synced folder (<code>code</code>) are visible.</p></li>
+<li><p>Run the notebook <code>01-get-data/coiled_notebooks_demo.ipynb</code></p>
 <ul>
 <li>the cell to list bucket contents should
 <ul>
-<li><p>run with no errors since the AWS user has Administrator privileges</p></li>
+<li><p>run with no errors since the AWS user has <em>AmazonS3FullAccess</em> privileges</p></li>
 <li><p>produce the following output</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> s3_client.list_buckets()[<span class="st">'Buckets'</span>]</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>[</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    {</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Name'</span>: <span class="st">'oss-shared-scratchp'</span>,</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">'CreationDate'</span>: <span class="op">&lt;</span>creation<span class="op">-</span>datetime(s)<span class="op">-</span>here<span class="op">&gt;</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    },</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    {</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Name'</span>: <span class="op">&lt;</span>additional<span class="op">-</span>bucket(s)<span class="op">-</span>here<span class="op">&gt;</span>,</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">'CreationDate'</span>: <span class="op">&lt;</span>creation<span class="op">-</span>datetime(s)<span class="op">-</span>here<span class="op">&gt;</span>,</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    },</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> s3_client.list_buckets()[<span class="st">'Buckets'</span>]</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>[</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Name'</span>: <span class="st">'oss-shared-scratchp'</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">'CreationDate'</span>: <span class="op">&lt;</span>creation<span class="op">-</span>datetime(s)<span class="op">-</span>here<span class="op">&gt;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Name'</span>: <span class="op">&lt;</span>additional<span class="op">-</span>bucket(s)<span class="op">-</span>here<span class="op">&gt;</span>,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">'CreationDate'</span>: <span class="op">&lt;</span>creation<span class="op">-</span>datetime(s)<span class="op">-</span>here<span class="op">&gt;</span>,</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
 </ul></li>
 </ul></li>
 </ol>
 </section>
-<section id="notes" class="level2">
-<h2 class="anchored" data-anchor-id="notes">Notes</h2>
+<section id="teardown" class="level3">
+<h3 class="anchored" data-anchor-id="teardown">Teardown</h3>
 <ol type="1">
-<li>If the contents of <code>code/</code> are to be synced to the Coiled notebook, then run <code>cd code/</code> before running the <code>coiled notebook start</code> command. This is shown in step 6. In <code>tox.ini</code>, this is done using the <code>changedir</code> directive.</li>
-</ol>
-</section>
-<section id="links" class="level2">
-<h2 class="anchored" data-anchor-id="links">Links</h2>
-<ol type="1">
-<li>AWS EC2 instance
-<ul>
-<li><a href="https://aws.amazon.com/ec2/instance-types/">types</a></li>
-<li><a href="https://aws.amazon.com/ec2/pricing/on-demand/">pricing</a></li>
-</ul></li>
-<li><a href="https://youtu.be/s4Ge6QICz98?si=BWVNyegpd9o1Dnwl&amp;t=508">Demo webinar for Coiled notebooks</a>
-<ul>
-<li>functionality in <code>coiled_notebooks_demo.ipynb</code> is covered in 08:28 - 11:02 of this video</li>
-</ul></li>
-</ol>
-</section>
-<section id="future-work" class="level2">
-<h2 class="anchored" data-anchor-id="future-work">Future Work</h2>
-<ol type="1">
-<li>Replace all <code>boto3</code> functionality of <code>00_0_0_manaage_coiled.ipynb</code> by Ansible playbook that performs the following
-<ul>
-<li>create IAM role <em>coiled-COILED_ACCOUNT_NAME</em></li>
-<li>create Coiled instance policy named <em>CoiledInstancePolicy</em></li>
-<li>create <a href="https://docs.coiled.io/user_guide/setup/aws/manual.html#create-iam-policies">Coiled IAM ongoing and setup policies</a></li>
-<li>create non-admin IAM user</li>
-<li>attach policies to IAM role
-<ul>
-<li>Coiled instance policy</li>
-<li><code>AmazonS3FullAccess</code></li>
-</ul></li>
-<li>attach policies to IAM user
-<ul>
-<li>setup policy</li>
-<li>ongoing policy</li>
-</ul></li>
-<li>(optional) create IAM access key for EC2 instance</li>
-<li>create private S3 bucket</li>
-</ul></li>
+<li><p>Delete all AWS and Coiled resources that were created by the administrative tasks step earlier using</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> delete</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
 </ol>
 
 
+</section>
 </section>
 </section>
 
