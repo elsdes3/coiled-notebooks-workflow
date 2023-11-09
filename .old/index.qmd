@@ -1,0 +1,148 @@
+# Workflow
+
+## Pre-Requisites
+
+1. Create an AWS Administrator user with secret access keys for programmatic management of AWS resources using the AWS console (see 05:20 - 09:35 from [this walkthrough of setting up an AWS account](https://youtu.be/FRQ9fE4fd5g?si=yI0D4F_FhVTVmgQn&t=320)). Access keys should be downloaded to `~/.aws/credentials` under the `default` profile (non-`default` profile will not work). Ensure `~/.aws/config` does not exist.
+
+## Usage
+
+1. Install and Configure [Mutagen](https://mutagen.io/documentation/introduction) using the [official installation documentation](https://mutagen.io/documentation/introduction/installation#other-platforms)
+
+   - download `.tar.gz` file to `${HOME}`
+   - extract into `${HOME}`
+   - add extracted [contents to system path](https://askubuntu.com/a/60219/389946)
+     - Run
+
+       ```bash
+       nano ~/.bashrc
+       ```
+     - Append the following to the end of the file
+
+       ```bash
+       export PATH=$PATH:/home/<user-name>/mutagen_linux_amd64_vX.XX.X
+       ```
+     - Save the file using <kbd>Ctrl</kbd> + <kbd>C</kbd>
+     - Enter `Y` to save changes
+     - Source the modified `.bashrc` file using
+
+       ```bash
+       source ~/.bashrc
+       ```
+2. Export `COILED_TOKEN` and `COILED_ACCOUNT_NAME` as environment variables
+
+   ```bash
+   export COILED_TOKEN=<coiled-token>
+   export COILED_ACCOUNT_NAME=<coiled-account-name>
+   ```
+3. Log in to Coiled
+
+   ```bash
+   coiled login --token {env:COILED_TOKEN} -a {env:COILED_ACCOUNT_NAME} --no-browser
+   ```
+   or
+   ```bash
+   make coiled-login
+   ```
+   which will create an entry in `~/.config/dask/coiled.yaml`
+4. Perform the following AWS administrative tasks
+
+   - Create AWS IAM (non-administrator) User named `<username>`
+   - Grant `AmazonS3FullAccess` permissions to newly created user
+   - Create token for newly created user
+
+   using
+
+   ```bash
+   make coiled-setup
+   ```
+
+   and run the code in **Setup Coiled Cloud Provider (AWS)**
+4. Configure Coiled to use AWS Cloud with the IAM User created in the step above
+
+   ```bash
+   coiled setup aws --account {env:COILED_ACCOUNT_NAME} \
+       --profile default \
+       --region us-east-2 \
+       --iam-user <username>
+   ```
+
+   or
+
+   ```bash
+   make coiled-setup
+   ```
+6. Create Coiled software environment named `<coiled-software-environment>` and AWS S3 storage bucket named `oss-shared-scratchp` to be used by Coiled notebook
+
+   ```bash
+   make coiled-software
+   ```
+
+   run the code in
+
+   - **Manage Coiled Software Environment(s)** > **Create**
+     - creates Coiled software environment
+   - **Setup Cloud Storage (AWS)**
+     - creates S3 storage bucket
+7. Start Coiled notebook from the `code` directory (the folder to be synced to the cloud notebook)
+
+   ```bash
+   cd code && coiled notebook start --sync --region us-east-2 \
+       --account {env:COILED_ACCOUNT_NAME} \
+       --name coilednb \
+       --software <coiled-software-environment> \
+       --vm-type t3.xlarge
+   ```
+
+   or
+
+   ```bash
+   make coiled-nb
+   ```
+8. The browser launches with Jupyterlab and the contents of the synced folder (`code`) are visible
+9. Run the notebook `coiled_notebooks_demo.ipynb`
+
+   - the cell to list bucket contents should
+     - run with no errors since the AWS user has Administrator privileges
+     - produce the following output
+
+       ```python
+       > s3_client.list_buckets()['Buckets']
+       [
+           {
+               'Name': 'oss-shared-scratchp',
+               'CreationDate': <creation-datetime(s)-here>
+           },
+           {
+               'Name': <additional-bucket(s)-here>,
+               'CreationDate': <creation-datetime(s)-here>,
+           },
+       ]
+       ```
+
+## Notes
+
+1. If the contents of `code/` are to be synced to the Coiled notebook, then run `cd code/` before running the `coiled notebook start` command. This is shown in step 6. In `tox.ini`, this is done using the `changedir` directive.
+
+## Links
+
+1. AWS EC2 instance
+   - [types](https://aws.amazon.com/ec2/instance-types/)
+   - [pricing](https://aws.amazon.com/ec2/pricing/on-demand/)
+2. [Demo webinar for Coiled notebooks](https://youtu.be/s4Ge6QICz98?si=BWVNyegpd9o1Dnwl&t=508)
+   - functionality in `coiled_notebooks_demo.ipynb` is covered in 08:28 - 11:02 of this video
+
+## Future Work
+
+1. Replace all `boto3` functionality of `00_0_0_manaage_coiled.ipynb` by Ansible playbook that performs the following
+   - create IAM role *coiled-COILED_ACCOUNT_NAME*
+   - create Coiled instance policy named *CoiledInstancePolicy*
+   - create [Coiled IAM ongoing and setup policies](https://docs.coiled.io/user_guide/setup/aws/manual.html#create-iam-policies)
+   - create non-admin IAM user
+   - attach policies to IAM role
+     - Coiled instance policy
+     - `AmazonS3FullAccess`
+   - attach policies to IAM user
+     - setup policy
+     - ongoing policy
+   - (optional) create IAM access key for EC2 instance
+   - create private S3 bucket

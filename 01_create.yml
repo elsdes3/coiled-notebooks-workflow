@@ -1,0 +1,108 @@
+---
+- name: ping
+  hosts: localhost
+  become: false
+  any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
+  no_log: false
+  gather_facts: true
+
+  tasks:
+    - name: Run preliminary checks
+      block:
+        - name: Ping local host
+          ansible.builtin.ping:
+        - name: Get the current caller identity information
+          amazon.aws.aws_caller_info:
+          register: caller_info
+        - name: Show caller
+          debug:
+            msg: "IAM User: {{ caller_info['arn'].split('/')[1] }}"
+        - name: Show required environment variables
+          debug:
+            msg: "{{ item }}: {{ lookup('env', item) }}"
+          loop:
+            - 'COILED_ACCOUNT_NAME'
+            - 'AWS_PROFILE'
+      tags:
+        - check
+
+    - name: Ensure required S3 bucket exits
+      amazon.aws.s3_bucket:
+        name: oss-shared-scratchp
+        state: present
+      tags:
+        - aws
+
+    - name: Ensure required managed IAM policies exist
+      community.aws.iam_managed_policy:
+        policy_name: "{{ item.name }}"
+        policy_description: "{{ item.desc }}"
+        policy: "{{ lookup('file', item.filename) }}"
+        state: present
+      loop:
+        - name: CoiledInstancePolicy
+          desc: Policy to allow coiled managed instances to submit logs to cloudwatch
+          filename: "files/ec2_policy.json"
+        - name: demo-setup
+          desc: Coiled setup IAM policy
+          filename: "files/coiled_setup.json"
+        - name: demo-ongoing
+          desc: Coiled ongoing IAM policy
+          filename: "files/coiled_ongoing.json"
+      tags:
+        - aws
+
+    - name: Ensure IAM role and user with these policies exist
+      block:
+        - name: Get the current caller identity information
+          amazon.aws.aws_caller_info:
+          register: caller_info
+
+        - name: Ensure IAM role with S3 and Coiled instance policies exists
+          community.aws.iam_role:
+            name: "coiled-{{ lookup('env', 'COILED_ACCOUNT_NAME') }}"
+            path: "/"
+            max_session_duration: 3600
+            assume_role_policy_document: "{{ lookup('file', 'files/role_policy.json') }}"
+            managed_policies:
+              - arn:aws:iam::aws:policy/AmazonS3FullAccess
+              - "arn:aws:iam::{{ caller_info['account'] }}:policy/CoiledInstancePolicy"
+            description: A role created by Coiled to be attached to EC2 instances.
+            state: present
+
+        - name: Ensure IAM user with ongoing and setup policies exists
+          amazon.aws.iam_user:
+            name: demo
+            managed_policies:
+              - "arn:aws:iam::{{ caller_info['account'] }}:policy/demo-ongoing"
+              - "arn:aws:iam::{{ caller_info['account'] }}:policy/demo-setup"
+            state: present
+      tags:
+        - aws
+
+    - name: Ensure Coiled resources are provisioned
+      block:
+        - name: Ensure Coiled software environment exists
+          ansible.builtin.script: manage_coiled_software.py --softw-env 'create'
+          args:
+            executable: python3
+          register: cenv
+          changed_when:
+            - '"--- Logs from remote build follow ---" in cenv.stdout'
+            - '"Installing environment.yaml:" in cenv.stdout'
+            - '"Installing collected packages:" in cenv.stdout'
+
+        # - name: Ensure Coiled cloud provider is setup
+        #   ansible.builtin.shell: |
+        #     coiled setup aws \
+        #     --account "{{ lookup('env', 'COILED_ACCOUNT_NAME') }}" \
+        #     --profile "{{ lookup('env', 'AWS_PROFILE') }}" \
+        #     --region us-east-2 \
+        #     --iam-user demo \
+        #     --yes
+        #   register: csetup
+        # - name:
+        #   debug:
+        #     msg: "{{ csetup }}"
+      tags:
+        - coiled

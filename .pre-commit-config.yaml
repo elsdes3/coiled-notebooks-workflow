@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/ambv/black
-    rev: 23.10.0
+    rev: 23.11.0
     hooks:
     - id: black
       name: Ensure black code formatting
@@ -9,8 +9,9 @@ repos:
       verbose: true
       exclude: |
           (?x)(
-              __init__.py|
-              ^_site/
+              code/src/__init__.py|
+              inventories/|
+              files/
           )
   - repo: https://github.com/pycqa/flake8
     rev: 6.1.0
@@ -43,7 +44,10 @@ repos:
       language_version: python3.10
       args: ["--markdown-linebreak-ext=md"]
       verbose: true
-      exclude: ^(_site/)
+      exclude: |
+          (?x)(
+              code/src/__init__.py
+          )
   - repo: https://github.com/econchick/interrogate
     rev: 1.5.0
     hooks:
@@ -54,7 +58,7 @@ repos:
       verbose: true
       exclude: |
           (?x)(
-              __init__.py
+              code/src/__init__.py
           )
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.5
@@ -67,5 +71,5 @@ repos:
       files: \.(py)$
       exclude: |
           (?x)(
-              __init__.py
+              code/src/__init__.py
           )

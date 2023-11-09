@@ -1,0 +1,49 @@
+---
+- name: ping
+  hosts: localhost
+  become: false
+  any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
+  no_log: false
+  gather_facts: true
+
+  tasks:
+    - name: Ensure roles and users do not exist
+      block:
+        - name: Get the current caller identity information
+          amazon.aws.aws_caller_info:
+          register: caller_info
+
+        - name: Ensure IAM user with ongoing and setup policies does not exist
+          amazon.aws.iam_user:
+            name: demo
+            state: absent
+
+        - name: Ensure IAM role with S3 and Coiled instance policies does not exist
+          community.aws.iam_role:
+            name: "coiled-{{ lookup('env', 'COILED_ACCOUNT_NAME') }}"
+            state: absent
+      tags:
+        - aws
+
+    - name: Ensure required managed IAM policies do not exist
+      community.aws.iam_managed_policy:
+        policy_name: "{{ item.name }}"
+        state: absent
+      loop:
+        - name: CoiledInstancePolicy
+        - name: demo-setup
+        - name: demo-ongoing
+      tags:
+        - aws
+
+    - name: Ensure Coiled resources are removed
+      block:
+        - name: Ensure Coiled software environment does not exist
+          ansible.builtin.script: manage_coiled_software.py --softw-env 'delete'
+          args:
+            executable: python3
+          register: cenv
+          changed_when:
+            - '"Software environment deleted successfully." in cenv.stdout'
+      tags:
+        - coiled

@@ -19,17 +19,17 @@ coiled-login:
 	@tox -e login
 .PHONY: coiled-login
 
-## Create project resources
-create:
+## Run Jupyter Lab to manage coiled resources
+coiled-manage:
 	@echo "+ $@"
-	@tox -e configure -- create
-.PHONY: create
+	@tox -e manage
+.PHONY: coiled-manage
 
-## Delete project resources
-delete:
+## Setup Coiled to access cloud provider
+coiled-setup:
 	@echo "+ $@"
-	@tox -e configure -- delete
-.PHONY: delete
+	@tox -e setup
+.PHONY: coiled-setup
 
 ## Run Coiled notebook
 coiled-nb:
